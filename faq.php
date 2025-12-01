@@ -62,44 +62,20 @@
     <div class="container">
       <h1 class="text-center mb-4" style="color: var(--primary-color);">常見問題</h1>
       <div class="accordion" id="faqAccordion">
+        <?php foreach($faqs->data as $key => $faq): ?>
         <div class="accordion-item">
-          <h2 class="accordion-header" id="headingOne">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-              如何預約空間？
+          <h2 class="accordion-header" id="heading-<?php echo $key; ?>">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<?php echo $key; ?>" aria-expanded="true" aria-controls="collapseOne">
+              <?php echo $faq->title; ?>
             </button>
           </h2>
-          <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+          <div id="collapse-<?php echo $key; ?>" class="accordion-collapse collapse" aria-labelledby="heading-<?php echo $key; ?>" data-bs-parent="#faqAccordion">
             <div class="accordion-body">
-              您可以透過首頁的搜尋功能選擇需要的設備條件，點選感興趣的空間，然後依照引導填寫預約資訊並完成確認即可。
+              <?php echo nl2br($faq->answer); ?>
             </div>
           </div>
         </div>
-
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="headingTwo">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-              空間是否有最低租用時間？
-            </button>
-          </h2>
-          <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
-            <div class="accordion-body">
-              每個空間的最低租用時間不同，請參考各空間頁面中的詳細說明，通常以 1 小時為單位起租。
-            </div>
-          </div>
-        </div>
-
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="headingThree">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-              可以取消預約嗎？
-            </button>
-          </h2>
-          <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
-            <div class="accordion-body">
-              可以取消預約，但請依照各空間提供者的取消政策操作。若於 24 小時內取消，可能會收取部分費用。
-            </div>
-          </div>
-        </div>
+        <?php endforeach; ?>
 
       </div>
     </div>
