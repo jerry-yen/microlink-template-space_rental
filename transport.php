@@ -57,6 +57,23 @@
       box-shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
     }
 
+    /* Masonry (瀑布流) */
+    .masonry {
+      column-gap: 1.5rem;
+      -webkit-column-gap: 1.5rem;
+      /* default to 1 column on very small screens, adjusted with media queries below */
+      column-count: 1;
+    }
+
+    .masonry-item {
+      display: inline-block;
+      width: 100%;
+      margin: 0 0 1.5rem;
+      -webkit-column-break-inside: avoid;
+      -moz-column-break-inside: avoid;
+      column-break-inside: avoid;
+    }
+
     footer {
       background-color: var(--navbar-bg);
       color: var(--navbar-text);
@@ -138,6 +155,22 @@
   }
 </style>
 
+<style>
+  /* 固定為 2 欄瀑布流（手機小於 576px 時為 1 欄） */
+  @media (min-width: 576px) {
+    .masonry { column-count: 2; }
+  }
+  @media (min-width: 992px) {
+    .masonry { column-count: 2; }
+  }
+
+  /* ensure embedded maps and media fill the card */
+  .masonry .info-box iframe.map { height: 280px; }
+  @media (min-width: 992px) {
+    .masonry .info-box iframe.map { height: 320px; }
+  }
+</style>
+
 <body class="d-flex flex-column min-vh-100">
   <!-- Navbar -->
   <?php include_once 'include/nav.php'; ?>
@@ -155,10 +188,10 @@
         <h1 class="mb-3" style="color: var(--primary-color);">交通資訊</h1>
         <p class="text-muted mb-4">以下說明包含大眾運輸、開車路線、地圖位置、停車與營業時間，協助您順利抵達。</p>
 
-        <div class="row ">
+        <div class="masonry">
           <?php foreach ($transports->data as $transport): ?>
-            <div class="col-lg-6">
-              <div class="info-box mb-4">
+            <div class="masonry-item">
+              <div class="info-box">
                 <h4 class="mb-3"><?php echo $transport->title; ?></h4>
                 <?php if ($transport->content_type == 'google-map'): ?>
                   <iframe class="map"
