@@ -87,12 +87,70 @@
   </style>
 </head>
 <style>
-    /* 固定社群按鈕（桌面側邊 / 手機底部） */
-    .social-fixed { position: fixed; right: 18px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 1050; }
-    .social-fixed a { width: 48px; height: 48px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; color: #fff; text-decoration: none; box-shadow: 0 6px 18px rgba(16,24,40,0.12); transition: transform 0.14s ease, box-shadow 0.14s ease; font-size:20px; }
-    .social-fixed a:focus, .social-fixed a:hover { transform: translateY(-3px); box-shadow: 0 10px 22px rgba(16,24,40,0.16); }
-    .social-fb { background:#1877F2; } .social-ig { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); } .social-line { background:#00C300; }
-    @media (max-width: 767.98px) { .social-fixed { right:0; left:0; bottom:0; top:auto; transform:none; flex-direction:row; justify-content:center; padding:10px 6px; background: rgba(255,255,255,0.92); box-shadow: 0 -6px 18px rgba(16,24,40,0.06); } .social-fixed a { width:44px; height:44px; font-size:18px; } }
+  /* 固定社群按鈕（桌面側邊 / 手機底部） */
+  .social-fixed {
+    position: fixed;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1050;
+  }
+
+  .social-fixed a {
+    width: 48px;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: #fff;
+    text-decoration: none;
+    box-shadow: 0 6px 18px rgba(16, 24, 40, 0.12);
+    transition: transform 0.14s ease, box-shadow 0.14s ease;
+    font-size: 20px;
+  }
+
+  .social-fixed a:focus,
+  .social-fixed a:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px rgba(16, 24, 40, 0.16);
+  }
+
+  .social-fb {
+    background: #1877F2;
+  }
+
+  .social-ig {
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+  }
+
+  .social-line {
+    background: #00C300;
+  }
+
+  @media (max-width: 767.98px) {
+    .social-fixed {
+      right: 0;
+      left: 0;
+      bottom: 0;
+      top: auto;
+      transform: none;
+      flex-direction: row;
+      justify-content: center;
+      padding: 10px 6px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 -6px 18px rgba(16, 24, 40, 0.06);
+    }
+
+    .social-fixed a {
+      width: 44px;
+      height: 44px;
+      font-size: 18px;
+    }
+  }
 </style>
 
 <body class="d-flex flex-column min-vh-100">
@@ -111,48 +169,59 @@
   <!-- 空間詳細內容 -->
   <section class="py-5">
     <div class="container">
-      <h1 class="mb-4" style="color: var(--primary-color);">創意工作坊A廳</h1>
-      <p class="lead">位於台北館的創意工作坊A廳，空間寬敞舒適，適合小型工作坊、會議與課程進行。</p>
+      <h1 class="mb-4" style="color: var(--primary-color);"><?php echo $space->title; ?></h1>
+      <p class="lead"><?php echo $space->description ?? ''; ?></p>
 
       <div class="row mb-4">
         <div class="col-md-6">
           <h5>空間資訊</h5>
           <ul class="list-group list-group-flush">
-            <li class="list-group-item">容納人數：20人</li>
-            <li class="list-group-item">設備：投影機、白板、Wi-Fi、定期清潔</li>
-            <li class="list-group-item">地點：台北市大安區信義路</li>
-            <li class="list-group-item">價格：NT$800/小時</li>
+            <li class="list-group-item">容納人數：<?php echo $space->capacity ?? '0'; ?>人</li>
+            <li class="list-group-item">坪數：<?php echo $space->ping ?? '0'; ?>坪</li>
+            <li class="list-group-item">館別：<?php echo $space->branch->title ?? ''; ?></li>
+            <li class="list-group-item">地點：<?php echo $space->branch->address ?? ''; ?></li>
+            <li class="list-group-item">桌椅：<?php echo $space->has_furniture == 'Y' ? '有' : '無'; ?></li>
+            <li class="list-group-item">設備：<?php echo $space->facilities ?? ''; ?></li>
             <li class="list-group-item">
               <strong>使用規範：</strong>
-              <ul class="mt-2">
-                <li>請於使用結束後歸還原狀。</li>
-                <li>禁止吸菸與飲酒。</li>
-                <li>如需延長使用時間，請提前聯絡管理員。</li>
-                <li>空間僅供預約者使用，不得轉租。</li>
-              </ul>
+              <?php echo $space->regulations ?? ''; ?>
             </li>
           </ul>
         </div>
         <div class="col-md-6">
-          <h5>設備圖片</h5>
-          <img
-            src="https://images.pexels.com/photos/1181396/pexels-photo-1181396.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=800&h=500"
-            class="img-fluid rounded" alt="設備圖片">
+          <h5>圖片</h5>
+          <div class="ratio rounded overflow-hidden" style="--bs-aspect-ratio: 62.5%;">
+            <img src="<?php echo $domain_url . '/' . htmlspecialchars($space->images); ?>"
+              alt="<?php echo $space->title; ?>" style="object-fit: cover; width: 100%; height: 100%;">
+          </div>
         </div>
 
-        <!-- 價目與容納（整合於設備圖片下方） -->
+        <!-- 價目表（整合於設備圖片下方） -->
+
         <div class="col-12 mt-4">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title" style="color: var(--primary-color);">價目與容納</h5>
+              <h5 class="card-title" style="color: var(--primary-color);">價目表</h5>
               <div class="row">
                 <div class="col-md-6">
-                  <ul class="list-unstyled mb-0">
-                    <li><strong>基本租金：</strong>NT$800 / 小時（視空間而定，詳見完整價目表）</li>
-                    <li><strong>最小預約時段：</strong>1 小時</li>
-                    <li><strong>可容納人數：</strong>4 - 20 人（依空間規格）</li>
-                    <li><strong>押金與清潔：</strong>視情況收取押金，需保持場地清潔</li>
-                  </ul>
+                  <?php if ($space->category == 'large'): ?>
+                    <ul class="list-unstyled mb-0">
+                      <li><strong>1 個時段的總價：</strong>NT$<?php echo number_format($space->price_1_session ?? 0); ?></li>
+                      <li><strong>2 個時段的總價：</strong>NT$<?php echo number_format($space->price_2_session ?? 0); ?></li>
+                      <li><strong>3 個時段的總價：</strong>NT$<?php echo number_format($space->price_3_session ?? 0); ?></li>
+                      <li><strong>延時 (每小時)
+                          的費用：</strong>NT$<?php echo number_format($space->overtime_hourly_price ?? 0); ?></li>
+                    </ul>
+                  <?php else: ?>
+                    <ul class="list-unstyled mb-0">
+                      <li><strong>每小時價格：</strong>NT$<?php echo number_format($space->default_hourly_price_cents ?? 0); ?>
+                      </li>
+                      <li><strong>3 小時 (含)
+                          以上的每小時費率：</strong>NT$<?php echo number_format($space->hourly_price_3hr_plus ?? 0); ?></li>
+                      <li><strong>6 小時 (含)
+                          以上的每小時費率：</strong>NT$<?php echo number_format($space->hourly_price_6hr_plus ?? 0); ?></li>
+                    </ul>
+                  <?php endif; ?>
                 </div>
                 <div class="col-md-6">
                   <p class="text-muted mb-2">常用租借設備：投影機、白板、桌椅、麥克風/音響、視訊鏡頭等。詳細收費請參考「價目表」頁面。</p>
@@ -165,20 +234,22 @@
 
       </div>
 
-      <!-- 聯絡資訊 -->
-      <div class="contact-box mb-5">
-        <strong>想要預訂這個空間嗎？歡迎與我們聯絡！</strong>
-        <p><i class="fas fa-envelope me-2"></i>service@spacehub.com</p>
-        <p><i class="fas fa-phone me-2"></i>(02) 1234-5678</p>
-      </div>
+
 
       <!-- 行事曆區塊 -->
-      <div class="calendar-container">
+      <div class="calendar-container mb-5">
         <h5 class="mb-3">空間使用行事曆</h5>
         <iframe
           src="https://calendar.google.com/calendar/embed?src=your-calendar-id%40group.calendar.google.com&ctz=Asia%2FTaipei"
           style="border: 0" frameborder="0" scrolling="no"></iframe>
         <p class="text-muted mt-2">以上行事曆顯示此空間的預約狀況，點選事件可查看詳細資訊。</p>
+      </div>
+
+      <!-- 聯絡資訊 -->
+      <div class="contact-box mb-5">
+        <strong>如有任何問題，歡迎與我們聯絡！</strong>
+        <p><i class="fas fa-envelope me-2"></i><?php echo $setting->email; ?></p>
+        <p><i class="fas fa-phone me-2"></i><?php echo $setting->phone; ?></p>
       </div>
 
     </div>
@@ -192,9 +263,12 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <!-- 固定社群按鈕（FB / IG / 官方 LINE） -->
   <div class="social-fixed" aria-hidden="false">
-    <a class="social-fb" href="#" aria-label="Facebook - 打開新分頁" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
-    <a class="social-ig" href="#" aria-label="Instagram - 打開新分頁" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
-    <a class="social-line" href="#" aria-label="官方 LINE - 打開新分頁" target="_blank" rel="noopener noreferrer"><i class="fab fa-line"></i></a>
+    <a class="social-fb" href="#" aria-label="Facebook - 打開新分頁" target="_blank" rel="noopener noreferrer"><i
+        class="fab fa-facebook-f"></i></a>
+    <a class="social-ig" href="#" aria-label="Instagram - 打開新分頁" target="_blank" rel="noopener noreferrer"><i
+        class="fab fa-instagram"></i></a>
+    <a class="social-line" href="#" aria-label="官方 LINE - 打開新分頁" target="_blank" rel="noopener noreferrer"><i
+        class="fab fa-line"></i></a>
   </div>
 </body>
 

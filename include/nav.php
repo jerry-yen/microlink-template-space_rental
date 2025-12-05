@@ -3,7 +3,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 <nav class="navbar navbar-expand-lg" style="background-color: var(--navbar-bg);">
     <div class="container">
-      <a class="navbar-brand" href="index.html">思辨空間</a>
+      <a class="navbar-brand" href="<?php echo $domain_url; ?>/index.html">思辨空間</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
