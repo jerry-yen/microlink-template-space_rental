@@ -57,12 +57,70 @@
   </style>
 </head>
 <style>
-    /* 固定社群按鈕（桌面側邊 / 手機底部） */
-    .social-fixed { position: fixed; right: 18px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 1050; }
-    .social-fixed a { width: 48px; height: 48px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; color: #fff; text-decoration: none; box-shadow: 0 6px 18px rgba(16,24,40,0.12); transition: transform 0.14s ease, box-shadow 0.14s ease; font-size:20px; }
-    .social-fixed a:focus, .social-fixed a:hover { transform: translateY(-3px); box-shadow: 0 10px 22px rgba(16,24,40,0.16); }
-    .social-fb { background:#1877F2; } .social-ig { background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%); } .social-line { background:#00C300; }
-    @media (max-width: 767.98px) { .social-fixed { right:0; left:0; bottom:0; top:auto; transform:none; flex-direction:row; justify-content:center; padding:10px 6px; background: rgba(255,255,255,0.92); box-shadow: 0 -6px 18px rgba(16,24,40,0.06); } .social-fixed a { width:44px; height:44px; font-size:18px; } }
+  /* 固定社群按鈕（桌面側邊 / 手機底部） */
+  .social-fixed {
+    position: fixed;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1050;
+  }
+
+  .social-fixed a {
+    width: 48px;
+    height: 48px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: #fff;
+    text-decoration: none;
+    box-shadow: 0 6px 18px rgba(16, 24, 40, 0.12);
+    transition: transform 0.14s ease, box-shadow 0.14s ease;
+    font-size: 20px;
+  }
+
+  .social-fixed a:focus,
+  .social-fixed a:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px rgba(16, 24, 40, 0.16);
+  }
+
+  .social-fb {
+    background: #1877F2;
+  }
+
+  .social-ig {
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+  }
+
+  .social-line {
+    background: #00C300;
+  }
+
+  @media (max-width: 767.98px) {
+    .social-fixed {
+      right: 0;
+      left: 0;
+      bottom: 0;
+      top: auto;
+      transform: none;
+      flex-direction: row;
+      justify-content: center;
+      padding: 10px 6px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 -6px 18px rgba(16, 24, 40, 0.06);
+    }
+
+    .social-fixed a {
+      width: 44px;
+      height: 44px;
+      font-size: 18px;
+    }
+  }
 </style>
 
 <body class="d-flex flex-column min-vh-100">
@@ -70,7 +128,9 @@
 
   <!-- Banner -->
   <section>
-    <img src="https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1200&h=400" alt="價目表橫幅" class="w-100" style="height: 267px; object-fit: cover; filter: brightness(90%);">
+    <img
+      src="https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1200&h=400"
+      alt="價目表橫幅" class="w-100" style="height: 267px; object-fit: cover; filter: brightness(90%);">
   </section>
 
   <main class="flex-grow-1">
@@ -81,7 +141,7 @@
             <h1 class="mb-1" style="color: var(--primary-color);">價目表</h1>
             <p class="text-muted">以下內容依據現場公告與報價為準，請於預約時確認最終金額與可用設備。</p>
           </div>
-          
+
         </div>
 
         <div class="row">
@@ -105,36 +165,21 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>多功能教室</td>
-                        <td>29 坪</td>
-                        <td>NT$5,000</td>
-                        <td>NT$9,500</td>
-                        <td>NT$13,500</td>
-                        <td>NT$1,250</td>
-                        <td>70 人</td>
-                        <td>有</td>
-                      </tr>
-                      <tr>
-                        <td>會議室</td>
-                        <td>5.5 坪</td>
-                        <td>NT$2,000</td>
-                        <td>NT$3,800</td>
-                        <td>NT$5,400</td>
-                        <td>NT$500</td>
-                        <td>12 人</td>
-                        <td>有</td>
-                      </tr>
-                      <tr>
-                        <td>團體室</td>
-                        <td>13.5 坪</td>
-                        <td>NT$3,000</td>
-                        <td>NT$5,700</td>
-                        <td>NT$8,100</td>
-                        <td>NT$750</td>
-                        <td>12-20 人</td>
-                        <td>有</td>
-                      </tr>
+                      <?php
+                      if (isset($pricing->large) && is_array($pricing->large)): ?>
+                        <?php foreach ($pricing->large as $space): ?>
+                          <tr>
+                            <td><?php echo htmlspecialchars($space->title); ?></td>
+                            <td><?php echo htmlspecialchars($space->ping); ?> 坪</td>
+                            <td>NT$<?php echo number_format($space->price_1_session); ?></td>
+                            <td>NT$<?php echo number_format($space->price_2_session); ?></td>
+                            <td>NT$<?php echo number_format($space->price_3_session); ?></td>
+                            <td>NT$<?php echo number_format($space->overtime_hourly_price); ?></td>
+                            <td><?php echo htmlspecialchars($space->capacity); ?> 人</td>
+                            <td><?php echo $space->has_furniture === 'Y' ? '有' : '無'; ?></td>
+                          </tr>
+                        <?php endforeach; ?>
+                      <?php endif; ?>
                     </tbody>
                   </table>
                 </div>
@@ -155,24 +200,19 @@
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>遊戲室</td>
-                        <td>12 坪</td>
-                        <td>NT$800</td>
-                        <td>NT$760 /hr</td>
-                        <td>NT$720 /hr</td>
-                        <td>8-10 人</td>
-                        <td>無</td>
-                      </tr>
-                      <tr>
-                        <td>小型會議室（晨曦 / 談和 / 照源）</td>
-                        <td>4-5 坪</td>
-                        <td>NT$500</td>
-                        <td>NT$475 /hr</td>
-                        <td>NT$450 /hr</td>
-                        <td>3-4 人</td>
-                        <td>有</td>
-                      </tr>
+                      <?php if (isset($pricing->small) && is_array($pricing->small)): ?>
+                        <?php foreach ($pricing->small as $space): ?>
+                          <tr>
+                            <td><?php echo htmlspecialchars($space->title); ?></td>
+                            <td><?php echo htmlspecialchars($space->ping); ?> 坪</td>
+                            <td>NT$<?php echo number_format($space->default_hourly_price_cents); ?></td>
+                            <td>NT$<?php echo number_format($space->hourly_price_3hr_plus); ?> /hr</td>
+                            <td>NT$<?php echo number_format($space->hourly_price_6hr_plus); ?> /hr</td>
+                            <td><?php echo htmlspecialchars($space->capacity); ?> 人</td>
+                            <td><?php echo $space->has_furniture === 'Y' ? '有' : '無'; ?></td>
+                          </tr>
+                        <?php endforeach; ?>
+                      <?php endif; ?>
                     </tbody>
                   </table>
                 </div>
@@ -254,9 +294,12 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <!-- 固定社群按鈕（FB / IG / 官方 LINE） -->
   <div class="social-fixed" aria-hidden="false">
-    <a class="social-fb" href="#" aria-label="Facebook - 打開新分頁" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
-    <a class="social-ig" href="#" aria-label="Instagram - 打開新分頁" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
-    <a class="social-line" href="#" aria-label="官方 LINE - 打開新分頁" target="_blank" rel="noopener noreferrer"><i class="fab fa-line"></i></a>
+    <a class="social-fb" href="#" aria-label="Facebook - 打開新分頁" target="_blank" rel="noopener noreferrer"><i
+        class="fab fa-facebook-f"></i></a>
+    <a class="social-ig" href="#" aria-label="Instagram - 打開新分頁" target="_blank" rel="noopener noreferrer"><i
+        class="fab fa-instagram"></i></a>
+    <a class="social-line" href="#" aria-label="官方 LINE - 打開新分頁" target="_blank" rel="noopener noreferrer"><i
+        class="fab fa-line"></i></a>
   </div>
 </body>
 

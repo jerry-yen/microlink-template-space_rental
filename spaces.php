@@ -158,10 +158,9 @@
                 <div class="col">
                   <div class="card h-100 shadow-sm position-relative">
                     <div class="ratio" style="--bs-aspect-ratio: 62.5%;">
-                      <img
-                        src="<?php echo htmlspecialchars($space->images); ?>"
-                        class="card-img-top" alt="<?php echo $space->title; ?>"
-                        style="object-fit: cover; width: 100%; height: 100%;">
+                      <img class="card-img-top" alt="<?php echo $space->title; ?>"
+                        style="object-fit: cover; width: 100%; height: 100%;"
+                        src="<?php echo htmlspecialchars($space->images); ?>">
                     </div>
                     <div class="card-body">
                       <h5 class="card-title"><?php echo $space->title; ?></h5>
