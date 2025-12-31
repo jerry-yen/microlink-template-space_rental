@@ -1,10 +1,10 @@
 {
-  "name": "jerry-yen/microlink-template-space-rental",
-  "description": "Microlink 模組：榮欣空間承租前端模板",
-  "type": "microlink-template",
-  "license": "MIT",
-  "require": {
-    "jerry-yen/microlink-core": "^1.0"
-  },
-  "minimum-stability": "stable"
+    "name": "jerry-yen/microlink-template-space_rental",
+    "description": "Microlink 模組：榮欣空間承租前端模板",
+    "type": "microlink-template",
+    "license": "MIT",
+    "require": {
+        "jerry-yen/microlink-core": "^1.0"
+    },
+    "minimum-stability": "stable"
 }
