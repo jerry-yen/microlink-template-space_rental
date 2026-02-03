@@ -232,7 +232,7 @@
                 foreach ($banners->data as $banner_item):
                     $active_class = $is_first ? ' active' : '';
                     $is_first = false;
-                    ?>
+            ?>
                     <div class="carousel-item<?php echo $active_class; ?>">
                         <?php if (!empty($banner_item->url)): ?>
                             <a href="<?php echo htmlspecialchars($banner_item->url); ?>" target="_blank">
@@ -243,7 +243,7 @@
                             </a>
                         <?php endif; ?>
                     </div>
-                    <?php
+            <?php
                 endforeach;
             endif;
             ?>
@@ -303,14 +303,14 @@
                             $icon_class = 'fa-store';
                         elseif (mb_strpos($title, '裝潢') !== false)
                             $icon_class = 'fa-paint-roller';
-                        ?>
+                ?>
                         <div class="col">
                             <button class="btn btn-outline-secondary w-100">
                                 <i class="fas <?php echo $icon_class; ?> fa-lg mb-1"></i><br>
                                 <?php echo htmlspecialchars($title); ?>
                             </button>
                         </div>
-                        <?php
+                <?php
                     endforeach;
                 endif;
                 ?>
@@ -318,67 +318,165 @@
         </div>
     </section>
 
-    <section class="py-5">
+    <section class="py-5" id="featured-spaces">
         <div class="container">
             <h2 class="mb-4 text-center">精選空間照片</h2>
-            <!-- Removed debug print_r -->
-            <div class="row">
-                <?php
-                $all_spaces = [];
-                if (isset($branches) && isset($branches->data) && is_array($branches->data)):
-                    foreach ($branches->data as $branch):
-                        if (isset($branch->spaces) && is_array($branch->spaces)):
-                            foreach ($branch->spaces as $space):
-                                // Attach branch title to space object for easier access later
-                                $space->branch_title = $branch->title ?? '';
-                                $all_spaces[] = $space;
-                            endforeach;
-                        endif;
-                    endforeach;
-                endif;
+            <?php
+            // Prepare data for tabs and carousels
+            $all_spaces = [];
+            $spaces_by_branch = [];
+            $branch_tabs = [];
 
-                // Randomize and limit to 6
-                shuffle($all_spaces);
-                $display_spaces = array_slice($all_spaces, 0, 6);
+            if (isset($branches) && isset($branches->data) && is_array($branches->data)) {
+                foreach ($branches->data as $branch) {
+                    $b_title = $branch->title ?? '未命名館別';
+                    // Generate a safe, simple ID for tabs
+                    $b_id = md5($b_title);
 
-                foreach ($display_spaces as $space):
-                    // Prepare data
-                    $space_img = !empty($space->images) ? $domain_url . $space->images : 'https://placehold.co/600x400?text=No+Image';
-                    $space_title = htmlspecialchars($space->title ?? '');
-                    $space_desc = htmlspecialchars($space->description ?? '');
-                    // Truncate description if too long
-                    if (mb_strlen($space_desc) > 50)
-                        $space_desc = mb_substr($space_desc, 0, 50) . '...';
+                    $branch_tabs[] = [
+                        'title' => $b_title,
+                        'id' => $b_id
+                    ];
 
-                    $capacity = htmlspecialchars($space->capacity ?? 'N/A');
-                    $location = htmlspecialchars($space->branch_title ?? '');
+                    $spaces_by_branch[$b_id] = [];
 
-                    // Construct Link
-                    $space_id_full = $space->id ?? '';
-                    $space_id_short = explode('-', $space_id_full)[0];
-                    $platform = 'unknown'; // Fallback
-                    if (!empty($space->branch_title)) {
-                        $platform = $space->branch_title;
+                    if (isset($branch->spaces) && is_array($branch->spaces)) {
+                        foreach ($branch->spaces as $space) {
+                            $space->branch_title = $b_title;
+                            $spaces_by_branch[$b_id][] = $space;
+                            $all_spaces[] = $space;
+                        }
                     }
-                    $link_url = 'space.html/' . $space_id_short . '/' . $platform . '/' . $space_title;
-                    ?>
-                    <div class="col-md-4 mb-4">
-                        <div class="card space-card position-relative">
-                            <img src="<?php echo $space_img; ?>" class="card-img-top" alt="<?php echo $space_title; ?>">
-                            <div class="card-body">
-                                <h5 class="card-title"><?php echo $space_title; ?></h5>
-                                <p class="card-text"><?php echo $space_desc; ?></p>
-                                <p><i class="fas fa-users"></i> 可容納 <?php echo $capacity; ?> 人</p>
-                                <p><i class="fas fa-map-marker-alt"></i> <?php echo $location; ?></p>
-                                <a href="<?php echo $link_url; ?>" class="btn btn-primary">查看更多</a>
-                            </div>
-                            <a href="<?php echo $link_url; ?>" class="stretched-link"
-                                aria-label="查看 <?php echo $space_title; ?> 詳情"></a>
-                        </div>
-                    </div>
-                    <?php
-                endforeach;
+                }
+            }
+
+            // Randomize "All" spaces order
+            shuffle($all_spaces);
+            ?>
+
+            <!-- Hall Tabs -->
+            <ul class="nav nav-pills justify-content-center mb-5" id="spaceTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="tab-all" data-bs-toggle="pill" data-bs-target="#content-all" type="button" role="tab" aria-selected="true">全部</button>
+                </li>
+                <?php foreach ($branch_tabs as $tab): ?>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="tab-<?php echo $tab['id']; ?>" data-bs-toggle="pill" data-bs-target="#content-<?php echo $tab['id']; ?>" type="button" role="tab" aria-selected="false"><?php echo htmlspecialchars($tab['title']); ?></button>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content" id="spaceTabsContent">
+
+                <?php
+                // Create an array of all panes to render loop
+                $panes = array_merge(
+                    [['id' => 'all', 'spaces' => $all_spaces]],
+                    array_map(function ($t) use ($spaces_by_branch) {
+                        return ['id' => $t['id'], 'spaces' => $spaces_by_branch[$t['id']]];
+                    }, $branch_tabs)
+                );
+
+                foreach ($panes as $index => $pane):
+                    $isActive = ($index === 0) ? 'show active' : '';
+                    $paneId = 'content-' . $pane['id'];
+                    $carouselId = 'carousel-' . $pane['id'];
+                    $paneSpaces = $pane['spaces'];
                 ?>
+                    <div class="tab-pane fade <?php echo $isActive; ?>" id="<?php echo $paneId; ?>" role="tabpanel">
+                        <?php if (empty($paneSpaces)): ?>
+                            <div class="text-center py-5 text-muted">
+                                <i class="fas fa-box-open fa-3x mb-3"></i>
+                                <p>此類別目前沒有空間展示。</p>
+                            </div>
+                        <?php else: ?>
+                            <div id="<?php echo $carouselId; ?>" class="carousel slide carousel-dark" data-bs-ride="false" data-bs-interval="false">
+                                <div class="carousel-inner">
+                                    <?php
+                                    // Logic to generate slides:
+                                    // We want to step 3 items at a time.
+                                    // If total is not divisible by 3, we continue wrapping around until we return to offset 0.
+                                    // This creates a seamless loop that satisfies the user's request:
+                                    // e.g. 4 items: [0,1,2] -> [3,0,1] -> [2,3,0] -> [1,2,3] -> [0,1,2]...
+
+                                    $totalSpaceCount = count($paneSpaces);
+                                    $slides = [];
+
+                                    if ($totalSpaceCount > 0) {
+                                        $offset = 0;
+                                        // Safety break to prevent infinite loops in weird edge cases, though math guarantees return to 0
+                                        $maxLoops = 100;
+                                        $loopCount = 0;
+
+                                        do {
+                                            $currentSlice = [];
+                                            for ($i = 0; $i < 3; $i++) {
+                                                // Use modulo to wrap around
+                                                $currentSlice[] = $paneSpaces[($offset + $i) % $totalSpaceCount];
+                                            }
+                                            $slides[] = $currentSlice;
+
+                                            // Step by 3
+                                            $offset = ($offset + 3) % $totalSpaceCount;
+                                            $loopCount++;
+                                        } while ($offset !== 0 && $loopCount < $maxLoops);
+                                    }
+
+                                    foreach ($slides as $chunkIndex => $chunkSpaces):
+                                        $itemActive = ($chunkIndex === 0) ? 'active' : '';
+                                    ?>
+                                        <div class="carousel-item <?php echo $itemActive; ?>">
+                                            <div class="row">
+                                                <?php foreach ($chunkSpaces as $space):
+                                                    // Extract Variables
+                                                    $space_img = !empty($space->images) ? $domain_url . $space->images : 'https://placehold.co/600x400?text=No+Image';
+                                                    $space_title = htmlspecialchars($space->title ?? '');
+                                                    $space_desc = htmlspecialchars($space->description ?? '');
+                                                    if (mb_strlen($space_desc) > 50) $space_desc = mb_substr($space_desc, 0, 50) . '...';
+                                                    $capacity = htmlspecialchars($space->capacity ?? 'N/A');
+                                                    $location = htmlspecialchars($space->branch_title ?? '');
+
+                                                    // Link Construction
+                                                    $space_id_full = $space->id ?? '';
+                                                    $space_id_short = explode('-', $space_id_full)[0];
+                                                    $platform = !empty($space->branch_title) ? $space->branch_title : 'unknown';
+                                                    $link_url = 'space.html/' . $space_id_short . '/' . $platform . '/' . $space_title;
+                                                ?>
+                                                    <div class="col-md-4 mb-4">
+                                                        <div class="card space-card h-100 position-relative">
+                                                            <img src="<?php echo $space_img; ?>" class="card-img-top" alt="<?php echo $space_title; ?>">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title"><?php echo $space_title; ?></h5>
+                                                                <p class="card-text small mb-3"><?php echo $space_desc; ?></p>
+                                                                <div class="mt-auto">
+                                                                    <p class="mb-1"><i class="fas fa-users me-2"></i>可容納 <?php echo $capacity; ?> 人</p>
+                                                                    <p class="mb-2"><i class="fas fa-map-marker-alt me-2"></i><?php echo $location; ?></p>
+                                                                    <a href="<?php echo $link_url; ?>" class="btn btn-primary w-100 stretched-link">查看詳情</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+
+                                <?php if (count($slides) > 1): ?>
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#<?php echo $carouselId; ?>" data-bs-slide="prev" style="width: 5%;">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#<?php echo $carouselId; ?>" data-bs-slide="next" style="width: 5%;">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
+                                <?php endif; ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                <?php endforeach; ?>
             </div>
         </div>
     </section>
