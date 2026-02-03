@@ -25,7 +25,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <?php echo ($current_page == 'transport.html') ? 'aria-current="page"' : ''; ?>
             href="<?php echo $domain_url; ?>/transport.html">交通資訊</a></li>
         <li class="nav-item"><a class="nav-link <?php echo ($current_page == 'spaces.html') ? 'active' : ''; ?>" <?php echo ($current_page == 'spaces.html') ? 'aria-current="page"' : ''; ?>
-            href="<?php echo $domain_url; ?>/spaces.html">空間清單</a></li>
+            href="<?php echo $domain_url; ?>/spaces.html">空間介紹</a></li>
         <li class="nav-item"><a class="nav-link <?php echo ($current_page == 'application.html') ? 'active' : ''; ?>"
             <?php echo ($current_page == 'application.html') ? 'aria-current="page"' : ''; ?>
             href="<?php echo $domain_url; ?>/application.html">借用申請</a></li>

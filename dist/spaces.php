@@ -1,11 +1,11 @@
-<!-- 空間清單頁面：延續首頁樣式與結構 -->
+<!-- 空間介紹頁面：延續首頁樣式與結構 -->
 <!DOCTYPE html>
 <html lang="zh-Hant">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>空間清單 | <?php echo htmlspecialchars($setting->title); ?></title>
+  <title>空間介紹 | <?php echo htmlspecialchars($setting->title); ?></title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
@@ -129,13 +129,13 @@
   <section>
     <img
       src="https://images.pexels.com/photos/3184292/pexels-photo-3184292.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1200&h=400"
-      alt="空間清單橫幅" class="w-100" style="height: 267px; object-fit: cover; filter: brightness(90%);">
+      alt="空間介紹橫幅" class="w-100" style="height: 267px; object-fit: cover; filter: brightness(90%);">
   </section>
 
   <!-- 空間列表 with Tabs -->
   <section class="py-5">
     <div class="container">
-      <h1 class="text-center mb-5" style="color: var(--primary-color);">可預約空間清單</h1>
+      <h1 class="text-center mb-5" style="color: var(--primary-color);">可預約空間介紹</h1>
 
       <!-- Tabs -->
       <ul class="nav nav-tabs mb-4" id="spaceTab" role="tablist">
@@ -146,7 +146,8 @@
               data-bs-target="#branch-<?php echo $key; ?>"
               type="button"><?php echo htmlspecialchars($branch->title); ?></button>
           </li>
-          <?php $index++; endforeach; ?>
+        <?php $index++;
+        endforeach; ?>
       </ul>
 
       <div class="tab-content">
@@ -177,7 +178,8 @@
 
             </div>
           </div>
-          <?php $index++; endforeach; ?>
+        <?php $index++;
+        endforeach; ?>
       </div>
 
     </div>

@@ -278,7 +278,7 @@
                 <h5 class="card-title">快速聯絡</h5>
                 <p class="mb-1"><i class="fas fa-phone me-2"></i><?php echo htmlspecialchars($setting->phone); ?></p>
                 <p class="mb-1"><i class="fas fa-envelope me-2"></i><?php echo htmlspecialchars($setting->email); ?></p>
-                <a href="spaces.html" class="btn btn-outline-primary mt-2">回到空間清單</a>
+                <a href="spaces.html" class="btn btn-outline-primary mt-2">回到空間介紹</a>
               </div>
             </div>
 
